@@ -1,5 +1,9 @@
+<div class="controls">
+  <input type="text" [(ngModel)]="searchQuery" placeholder="Search products...">
+  <button (click)="filterProducts()">Поиск</button>
+</div>
 <div class="products-container">
-    <div *ngFor="let goods of products" class="product-card">
+    <div *ngFor="let goods of filteredProducts" class="product-card">
       <h2><a class="items" href="{{goods.productLink}}">{{ goods.name }}</a></h2>
       <p>{{ goods.description }}</p>
       <p>Price: {{ goods.price }} ₸</p>

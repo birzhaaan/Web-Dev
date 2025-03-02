@@ -21,8 +21,6 @@
   
   .product-image {
     width: 40% ;
-    /* height: 120px; */
-    /* border-radius: 10px; */
     margin-bottom: 10px;
     object-fit: cover;
   }
