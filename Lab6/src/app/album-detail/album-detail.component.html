@@ -1,1 +1,5 @@
-<p>album-detail works!</p>
+<h2>album-detail </h2>
+<p>ID: {{ album.id }}</p>
+<p>Title: <input [(ngModel)]="newTitle"><button (click)="saveTitle()">Save</button> </p>
+<button (click)="goBack()">Return</button>
+<a [routerLink]="['/albums', album.id, 'photos']">Photos</a>

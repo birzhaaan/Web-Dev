@@ -1,16 +1,13 @@
-<ul>
-  <li *ngFor="let album of albums">
-    <a [routerLink]="['/albums', album.id]">{{album.id}}) {{album.title}}</a>
-    <button (click)="deleteAlbum(album.id)">x</button>
-  </li>
-</ul>
+<h1>Albums</h1>
 
-<fieldset>
-  <label for="title">Title:</label>
-  <input type="text" [(ngModel)]="newAlbum.title" id="title"> <br />
-  
-  <label for="userId">Post description:</label>
-  <textarea [(ngModel)]="newAlbum.userId" id="userId"></textarea> <br />
-  
-  <button (click)="addAlbum()">Add album</button>
-</fieldset>
+<input [(ngModel)]="newAlbumTitle" placeholder="Title of album" />
+<button (click)="createAlbum()">Add album</button>
+
+<ul>
+  @for (album of albums; track album.id) {
+  <li>
+    <a [routerLink]="['/albums', album.id]">{{ album.title }}</a>
+    <button (click)="deleteAlbum(album.id)">Delete</button>
+  </li>
+  }
+</ul>

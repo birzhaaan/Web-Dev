@@ -1,65 +1,53 @@
-import {Component, OnInit} from '@angular/core';
-import {Album} from "../models";
-import {NgFor, CommonModule} from "@angular/common";
-import {ALBUMS} from "../fake-db";
-import {RouterLink} from "@angular/router";
-import {AlbumsService} from "../albums.service";
-import {FormsModule} from "@angular/forms";
+import { Component } from '@angular/core';
+import { AlbumsService } from '../albums.service';
+import { Album } from '../models';
+import { RouterLink } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-albums',
-  standalone: true,
-  imports: [
-    NgFor,
-    CommonModule,
-    ALBUMS,
-    RouterLink,
-    FormsModule
-  ],
+  imports: [RouterLink, FormsModule],
   templateUrl: './albums.component.html',
-  styleUrl: './albums.component.css'
+  styleUrl: './albums.component.css',
 })
-export class AlbumsComponent implements OnInit {
-  albums!: Album[];
-  newAlbum: Album;
-  loaded: boolean = false;
+export class AlbumsComponent {
+  albums: Album[] = [];
+  newAlbumTitle: string = '';
 
-  constructor(private albumService: AlbumsService) {
-    this.newAlbum = {
-      userId: 11,
-      id: 101,
-      title: ''
-    }
-  }
+  constructor(
+    private albumsService: AlbumsService,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.getAlbums_1();
+    this.albumsService.getAlbums().subscribe((data) => {
+      this.albums = data;
+    });
   }
 
-  addAlbum() {
-    this.albumService.createAlbum(this.newAlbum).subscribe((album) => {
-      this.albums.unshift(album);
-      alert('Album created');
-      this.newAlbum = {} as Album;
-    });
-  }
-  
-  getAlbums_1() {
-    this.loaded = false;
-    this.albumService.getAlbums().subscribe((albums) => {
-      this.albums = albums;
-      this.loaded = true;
-      console.log(this.albums)
-    });
-  }
-  
   deleteAlbum(id: number) {
-    this.albums = this.albums.filter((p) => p.id !== id);
-    this.albumService.deleteAlbum(id).subscribe(() => {
-      console.log('deleted');
+    console.log(`Attempting to delete album with ID: ${id}`);
+    this.albumsService.deleteAlbum(id).subscribe((data) => {
+      this.albums = data;
+      console.log('Updated albums list: ', this.albums);
     });
+    this.cdRef.detectChanges();
   }
 
+  createAlbum() {
+    if (!this.newAlbumTitle.trim()) return;
 
-  protected readonly NgFor = NgFor;
+    const newAlbum: Album = {
+      id: Math.floor(Math.random() * 10000),
+      title: this.newAlbumTitle,
+    };
+
+    this.albumsService.addAlbum(newAlbum).subscribe((album) => {
+      this.albums.push(album);
+      this.cdRef.detectChanges();
+    });
+
+    this.newAlbumTitle = '';
+  }
 }
